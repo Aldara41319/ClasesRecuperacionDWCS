@@ -1,3 +1,7 @@
+
+<?php
+    include "protect.php";
+?>
 <?php
 // Verificar si el parámetro ID existe antes de continuar
 if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){

@@ -1,4 +1,8 @@
 <?php
+    include "protect.php";
+?>
+
+<?php
 // Incluir archivo de configuración
 require_once "config.php";
 
