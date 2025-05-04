@@ -9,7 +9,7 @@ if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
     require_once "config.php";
     
     // Prepare a select statement
-    $sql = "SELECT * FROM employees WHERE id = :id";
+    $sql = "SELECT * FROM información WHERE id = :id";
     
     if($stmt = $pdo->prepare($sql)){
         // Bind variables to the prepared statement as parameters
@@ -26,9 +26,9 @@ if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
                 $row = $stmt->fetch(PDO::FETCH_ASSOC);
                 
                 // Retrieve individual field value
-                $name = $row["name"];
-                $address = $row["address"];
-                $salary = $row["salary"];
+                $name = $row["marca"];
+                $address = $row["modelo"];
+                $salary = $row["serie"];
             } else{
                 // URL doesn't contain valid id parameter. Redirect to error page
                 header("location: error.php");
@@ -73,15 +73,15 @@ if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
                     <h1 class="mt-5 mb-3">View Record</h1>
                     <div class="form-group">
                         <label>Name</label>
-                        <p><b><?php echo $row["name"]; ?></b></p>
+                        <p><b><?php echo $row["marca"]; ?></b></p>
                     </div>
                     <div class="form-group">
                         <label>Address</label>
-                        <p><b><?php echo $row["address"]; ?></b></p>
+                        <p><b><?php echo $row["modelo"]; ?></b></p>
                     </div>
                     <div class="form-group">
                         <label>Salary</label>
-                        <p><b><?php echo $row["salary"]; ?></b></p>
+                        <p><b><?php echo $row["serie"]; ?></b></p>
                     </div>
                     <p><a href="index.php" class="btn btn-primary">Back</a></p>
                 </div>

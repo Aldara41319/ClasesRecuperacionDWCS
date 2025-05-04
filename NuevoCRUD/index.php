@@ -48,9 +48,9 @@
                                 echo "<thead>";
                                     echo "<tr>";
                                         echo "<th>#</th>";
-                                        echo "<th>Name</th>";
-                                        echo "<th>Address</th>";
-                                        echo "<th>Salary</th>";
+                                        echo "<th>Marca</th>";
+                                        echo "<th>Modelo</th>";
+                                        echo "<th>Serie</th>";
                                         echo "<th>Action</th>";
                                     echo "</tr>";
                                 echo "</thead>";
@@ -58,9 +58,9 @@
                                 while($row = $result->fetch()){
                                     echo "<tr>";
                                         echo "<td>" . $row['id'] . "</td>";
-                                        echo "<td>" . $row['name'] . "</td>";
-                                        echo "<td>" . $row['address'] . "</td>";
-                                        echo "<td>" . $row['salary'] . "</td>";
+                                        echo "<td>" . $row['marca'] . "</td>";
+                                        echo "<td>" . $row['modelo'] . "</td>";
+                                        echo "<td>" . $row['serie'] . "</td>";
                                         echo "<td>";
                                             echo '<a href="read.php?id='. $row['id'] .'" class="mr-3" title="View Record" data-toggle="tooltip"><span class="fa fa-eye"></span></a>';
                                             echo '<a href="update.php?id='. $row['id'] .'" class="mr-3" title="Update Record" data-toggle="tooltip"><span class="fa fa-pencil"></span></a>';
