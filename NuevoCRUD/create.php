@@ -35,7 +35,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Check input errors before inserting in database
     if(empty($marca_err) && empty($modelo_err) && empty($serie_err)){
         // Prepare an insert statement
-        $sql = "INSERT INTO información (marca, modelo, serie) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO coches (marca, modelo, serie) VALUES (?, ?, ?)";
          
         if($stmt = mysqli_prepare($link, $sql)){
             // Bind variables to the prepared statement as parameters
