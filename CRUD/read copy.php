@@ -1,4 +1,8 @@
 <?php
+    include "protect.php";
+?>
+
+<?php
 // Check existence of id parameter before processing further
 if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
     // Include config file
@@ -22,9 +26,9 @@ if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
                 $row = $stmt->fetch(PDO::FETCH_ASSOC);
                 
                 // Retrieve individual field value
-                $marca = $row["marca"];
-                $modelo = $row["modelo"];
-                $serie = $row["serie"];
+                $name = $row["marca"];
+                $address = $row["modelo"];
+                $salary = $row["serie"];
             } else{
                 // URL doesn't contain valid id parameter. Redirect to error page
                 header("location: error.php");
@@ -68,7 +72,7 @@ if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
                 <div class="col-md-12">
                     <h1 class="mt-5 mb-3">View Record</h1>
                     <div class="form-group">
-                        <label>marca</label>
+                        <label>Name</label>
                         <p><b><?php echo $row["marca"]; ?></b></p>
                     </div>
                     <div class="form-group">

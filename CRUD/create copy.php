@@ -11,9 +11,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validate marca
     $input_marca = trim($_POST["marca"]);
     if(empty($input_marca)){
-        $marca_err = "Please enter a marca.";
-    } elseif(!filter_var($input_marca, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>"/^[a-zA-Z\s]+$/")))){
-        $marca_err = "Please enter a valid marca.";
+        $marca_err = "Por favor, introduce la marca.";
     } else{
         $marca = $input_marca;
     }
@@ -21,7 +19,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validate modelo
     $input_modelo = trim($_POST["modelo"]);
     if(empty($input_modelo)){
-        $modelo_err = "Please enter an modelo.";     
+        $modelo_err = "Por favor, introduce el modelo.";     
     } else{
         $modelo = $input_modelo;
     }
@@ -29,9 +27,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Validate serie
     $input_serie = trim($_POST["serie"]);
     if(empty($input_serie)){
-        $serie_err = "Please enter the serie amount.";     
-    } elseif(!ctype_digit($input_serie)){
-        $serie_err = "Please enter a positive integer value.";
+        $serie_err = "Por favor, introduce la serie.";     
     } else{
         $serie = $input_serie;
     }
@@ -39,13 +35,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Check input errors before inserting in database
     if(empty($marca_err) && empty($modelo_err) && empty($serie_err)){
         // Prepare an insert statement
-        $sql = "INSERT INTO employees (marca, modelo, serie) VALUES (:marca, :modelo, :serie)";
- 
-        if($stmt = $pdo->prepare($sql)){
+        $sql = "INSERT INTO coches (marca, modelo, serie) VALUES (?, ?, ?)";
+         
+        if($stmt = mysqli_prepare($link, $sql)){
             // Bind variables to the prepared statement as parameters
-            $stmt->bindParam(":marca", $param_marca);
-            $stmt->bindParam(":modelo", $param_modelo);
-            $stmt->bindParam(":serie", $param_serie);
+            mysqli_stmt_bind_param($stmt, "sss", $param_marca, $param_modelo, $param_serie);
             
             // Set parameters
             $param_marca = $marca;
@@ -53,29 +47,29 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             $param_serie = $serie;
             
             // Attempt to execute the prepared statement
-            if($stmt->execute()){
-                // Records created successfully. Redirect to landing page
+            if(mysqli_stmt_execute($stmt)){
+                // Record created successfully. Redirect to landing page
                 header("location: index.php");
                 exit();
             } else{
-                echo "Oops! Something went wrong. Please try again later.";
+                echo "¡Ups! Algo salió mal. Por favor, intenta más tarde.";
             }
         }
          
         // Close statement
-        unset($stmt);
+        mysqli_stmt_close($stmt);
     }
     
     // Close connection
-    unset($pdo);
+    mysqli_close($link);
 }
 ?>
  
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Create Record</title>
+    <title>Añadir Coche</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         .wrapper{
@@ -89,8 +83,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <h2 class="mt-5">Create Record</h2>
-                    <p>Please fill this form and submit to add employee record to the database.</p>
+                    <h2 class="mt-5">Añadir Coche</h2>
+                    <p>Rellena este formulario para añadir un coche a la base de datos.</p>
                     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
                         <div class="form-group">
                             <label>Marca</label>
@@ -107,8 +101,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             <input type="text" name="serie" class="form-control <?php echo (!empty($serie_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $serie; ?>">
                             <span class="invalid-feedback"><?php echo $serie_err;?></span>
                         </div>
-                        <input type="submit" class="btn btn-primary" value="Submit">
-                        <a href="index.php" class="btn btn-secondary ml-2">Cancel</a>
+                        <input type="submit" class="btn btn-primary" value="Guardar">
+                        <a href="index.php" class="btn btn-secondary ml-2">Cancelar</a>
                     </form>
                 </div>
             </div>        

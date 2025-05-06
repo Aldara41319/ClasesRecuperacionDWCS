@@ -1,3 +1,7 @@
+<?php
+    include "protect.php";
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,7 +34,7 @@
                 <div class="col-md-12">
                     <div class="mt-5 mb-3 clearfix">
                         <h2 class="pull-left">Coches</h2>
-                        <a href="create.php" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Añadir coche</a>
+                        <a href="create.php" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Nuevo coche</a>
                     </div>
                     <?php
                     // Include config file

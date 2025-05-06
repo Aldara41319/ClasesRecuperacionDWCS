@@ -1,143 +1,166 @@
 <?php
-// Incluir archivo de configuración
+// Include config file
 require_once "config.php";
-
-// Inicializar variables
+ 
+// Define variables and initialize with empty values
 $marca = $modelo = $serie = "";
 $marca_err = $modelo_err = $serie_err = "";
-
-// Procesar formulario cuando se envíe
-if(isset($_POST["id"]) && !empty($_POST["id"])) {
+ 
+// Processing form data when form is submitted
+if(isset($_POST["id"]) && !empty($_POST["id"])){
+    // Get hidden input value
     $id = $_POST["id"];
-
-    // Validar marca
+    
+    // Validate marca
     $input_marca = trim($_POST["marca"]);
-    if(empty($input_marca)) {
-        $marca_err = "Por favor ingresa la marca.";
-    } else {
+    if(empty($input_marca)){
+        $marca_err = "Please enter an marca.";     
+    } else{
         $marca = $input_marca;
     }
-
-    // Validar modelo
+    
+    // Validate modelo modelo
     $input_modelo = trim($_POST["modelo"]);
-    if(empty($input_modelo)) {
-        $modelo_err = "Por favor ingresa el modelo.";
-    } else {
+    if(empty($input_modelo)){
+        $modelo_err = "Please enter an modelo.";     
+    } else{
         $modelo = $input_modelo;
     }
-
-    // Validar serie
+    
+    // Validate serie
     $input_serie = trim($_POST["serie"]);
-    if(empty($input_serie)) {
-        $serie_err = "Por favor ingresa la serie.";
-    } else {
+    if(empty($input_serie)){
+        $serie_err = "Please enter an serie.";     
+    } else{
         $serie = $input_serie;
     }
-
-    // Verificar errores antes de actualizar
-    if(empty($marca_err) && empty($modelo_err) && empty($serie_err)) {
-        $sql = "UPDATE información SET marca=?, modelo=?, serie=? WHERE id=?";
-
-        if($stmt = mysqli_prepare($link, $sql)) {
-            mysqli_stmt_bind_param($stmt, "sssi", $param_marca, $param_modelo, $param_serie, $param_id);
-
+    
+    // Check input errors before inserting in database
+    if(empty($marca_err) && empty($modelo_err) && empty($serie_err)){
+        // Prepare an update statement
+        $sql = "UPDATE información SET marca=:marca, modelo=:modelo, serie=:serie WHERE id=:id";
+ 
+        if($stmt = $pdo->prepare($sql)){
+            // Bind variables to the prepared statement as parameters
+            $stmt->bindParam(":marca", $param_marca);
+            $stmt->bindParam(":modelo", $param_modelo);
+            $stmt->bindParam(":serie", $param_serie);
+            $stmt->bindParam(":id", $param_id);
+            
+            // Set parameters
             $param_marca = $marca;
             $param_modelo = $modelo;
             $param_serie = $serie;
             $param_id = $id;
-
-            if(mysqli_stmt_execute($stmt)) {
-                // Opcional: reorganizar IDs aquí (poco común para UPDATE)
-                /*
-                mysqli_query($link, "SET @count = 0");
-                mysqli_query($link, "UPDATE información SET id = (@count := @count + 1)");
-                mysqli_query($link, "ALTER TABLE información AUTO_INCREMENT = 1");
-                */
-                
+            
+            // Attempt to execute the prepared statement
+            if($stmt->execute()){
+                // Records updated successfully. Redirect to landing page
                 header("location: index.php");
                 exit();
-            } else {
-                echo "Algo salió mal. Inténtalo más tarde.";
+            } else{
+                echo "Oops! Something went wrong. Please try again later.";
             }
         }
-
-        mysqli_stmt_close($stmt);
+         
+        // Close statement
+        unset($stmt);
     }
-
-    mysqli_close($link);
-} else {
-    // Obtener datos para el formulario
-    if(isset($_GET["id"]) && !empty(trim($_GET["id"]))) {
-        $id = trim($_GET["id"]);
-
-        $sql = "SELECT * FROM información WHERE id = ?";
-        if($stmt = mysqli_prepare($link, $sql)) {
-            mysqli_stmt_bind_param($stmt, "i", $param_id);
+    
+    // Close connection
+    unset($pdo);
+} else{
+    // Check existence of id parameter before processing further
+    if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
+        // Get URL parameter
+        $id =  trim($_GET["id"]);
+        
+        // Prepare a select statement
+        $sql = "SELECT * FROM información WHERE id = :id";
+        if($stmt = $pdo->prepare($sql)){
+            // Bind variables to the prepared statement as parameters
+            $stmt->bindParam(":id", $param_id);
+            
+            // Set parameters
             $param_id = $id;
-
-            if(mysqli_stmt_execute($stmt)) {
-                $result = mysqli_stmt_get_result($stmt);
-
-                if(mysqli_num_rows($result) == 1) {
-                    $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
-
+            
+            // Attempt to execute the prepared statement
+            if($stmt->execute()){
+                if($stmt->rowCount() == 1){
+                    /* Fetch result row as an associative array. Since the result set
+                    contains only one row, we don't need to use while loop */
+                    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                
+                    // Retrieve individual field value
                     $marca = $row["marca"];
                     $modelo = $row["modelo"];
                     $serie = $row["serie"];
-                } else {
+                } else{
+                    // URL doesn't contain valid id. Redirect to error page
                     header("location: error.php");
                     exit();
                 }
-            } else {
-                echo "Algo salió mal. Intenta más tarde.";
+                
+            } else{
+                echo "Oops! Something went wrong. Please try again later.";
             }
         }
-
-        mysqli_stmt_close($stmt);
-        mysqli_close($link);
-    } else {
+        
+        // Close statement
+        unset($stmt);
+        
+        // Close connection
+        unset($pdo);
+    }  else{
+        // URL doesn't contain id parameter. Redirect to error page
         header("location: error.php");
         exit();
     }
 }
 ?>
-
-<!-- HTML -->
+ 
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Actualizar Coche</title>
+    <title>Update Record</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        .wrapper { width: 600px; margin: 0 auto; }
+        .wrapper{
+            width: 600px;
+            margin: 0 auto;
+        }
     </style>
 </head>
 <body>
     <div class="wrapper">
         <div class="container-fluid">
-            <h2 class="mt-5">Actualizar Coche</h2>
-            <p>Edita los datos y pulsa "Guardar cambios" para actualizar.</p>
-            <form action="<?php echo htmlspecialchars(basename($_SERVER['REQUEST_URI'])); ?>" method="post">
-                <div class="form-group">
-                    <label>Marca</label>
-                    <input type="text" name="marca" class="form-control <?php echo (!empty($marca_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $marca; ?>">
-                    <span class="invalid-feedback"><?php echo $marca_err;?></span>
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="mt-5">Update Record</h2>
+                    <p>Please edit the input values and submit to update the employee record.</p>
+                    <form action="<?php echo htmlspecialchars(basename($_SERVER['REQUEST_URI'])); ?>" method="post">
+                        <div class="form-group">
+                            <label>Marca</label>
+                            <input type="text" name="marca" class="form-control <?php echo (!empty($marca_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $marca; ?>">
+                            <span class="invalid-feedback"><?php echo $marca_err;?></span>
+                        </div>
+                        <div class="form-group">
+                            <label>Modelo</label>
+                            <input type="text" name="modelo" class="form-control <?php echo (!empty($modelo_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $modelo; ?>">
+                            <span class="invalid-feedback"><?php echo $modelo_err;?></span>
+                        </div>
+                        <div class="form-group">
+                            <label>Serie</label>
+                            <input type="text" name="serie" class="form-control <?php echo (!empty($serie_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $serie; ?>">
+                            <span class="invalid-feedback"><?php echo $serie_err;?></span>
+                        </div>
+                        <input type="hidden" name="id" value="<?php echo $id; ?>"/>
+                        <input type="submit" class="btn btn-primary" value="Submit">
+                        <a href="index.php" class="btn btn-secondary ml-2">Cancel</a>
+                    </form>
                 </div>
-                <div class="form-group">
-                    <label>Modelo</label>
-                    <input type="text" name="modelo" class="form-control <?php echo (!empty($modelo_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $modelo; ?>">
-                    <span class="invalid-feedback"><?php echo $modelo_err;?></span>
-                </div>
-                <div class="form-group">
-                    <label>Serie</label>
-                    <input type="text" name="serie" class="form-control <?php echo (!empty($serie_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $serie; ?>">
-                    <span class="invalid-feedback"><?php echo $serie_err;?></span>
-                </div>
-                <input type="hidden" name="id" value="<?php echo $id; ?>"/>
-                <input type="submit" class="btn btn-primary" value="Guardar cambios">
-                <a href="index.php" class="btn btn-secondary ml-2">Cancelar</a>
-            </form>
+            </div>        
         </div>
     </div>
 </body>
