@@ -68,15 +68,15 @@ if(isset($_GET["id"]) && !empty(trim($_GET["id"]))){
                 <div class="col-md-12">
                     <h1 class="mt-5 mb-3">View Record</h1>
                     <div class="form-group">
-                        <label>marca</label>
+                        <label>Marca</label>
                         <p><b><?php echo $row["marca"]; ?></b></p>
                     </div>
                     <div class="form-group">
-                        <label>Address</label>
+                        <label>Modelo</label>
                         <p><b><?php echo $row["modelo"]; ?></b></p>
                     </div>
                     <div class="form-group">
-                        <label>Salary</label>
+                        <label>Serie</label>
                         <p><b><?php echo $row["serie"]; ?></b></p>
                     </div>
                     <p><a href="index.php" class="btn btn-primary">Back</a></p>
