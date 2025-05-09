@@ -47,7 +47,7 @@
                                         echo "<th>Marca</th>";
                                         echo "<th>Modelo</th>";
                                         echo "<th>Serie</th>";
-                                        echo "<th>Action</th>";
+                                        echo "<th>Acciones</th>";
                                     echo "</tr>";
                                 echo "</thead>";
                                 echo "<tbody>";
