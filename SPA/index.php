@@ -2,29 +2,27 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Mi SPA en PHP</title>
-    <style>
-        nav a {
-            margin-right: 10px;
-            cursor: pointer;
-            color: blue;
-            text-decoration: underline;
-        }
-    </style>
+    <title>SPA en PHP</title>
+    <link rel="stylesheet" href="estilo.css">
 </head>
 <body>
-    <h1>Mi Web SPA</h1>
+    <header>
+        <h1>✨ Mi Sitio SPA</h1>
+        <nav>
+            <a data-page="home">Inicio</a>
+            <a data-page="servicios">Servicios</a>
+            <a data-page="contacto">Contacto</a>
+        </nav>
+    </header>
 
-    <nav>
-        <a data-page="home">Inicio</a>
-        <a data-page="servicios">Servicios</a>
-        <a data-page="contacto">Contacto</a>
-    </nav>
+    <main>
+        <div id="loader">Cargando...</div>
+        <div id="contenido"></div>
+    </main>
 
-    <div id="contenido">
-        <!-- Aquí se carga el contenido dinámico -->
-        <p>Cargando contenido...</p>
-    </div>
+    <footer>
+        <p>&copy; <?php echo date("Y"); ?> Mi Sitio SPA. Todos los derechos reservados.</p>
+    </footer>
 
     <script src="js/app.js"></script>
 </body>
