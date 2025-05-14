@@ -66,7 +66,7 @@ $conn->close();
 
 <script>
 	// Crear el mapa
-	const map = L.map('map').setView([42.3368, -7.8649], 13); // Centrado en Ourense
+	const map = L.map('map').setView([42.3368, -7.8649], 14); // Centrado en Ourense
 
 	// Agregar capa de OpenStreetMap
 	L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -79,7 +79,7 @@ $conn->close();
 	// Recorrer ubicaciones y añadir marcadores
 	locations.forEach(location => {
 		L.marker([location.latitude, location.longitude]).addTo(map)
-			.bindPopup(`<strong>${location.text}</strong><br><a href="${location.url}" target="_blank">Más info</a>`);
+			.bindPopup(`<strong>${location.text}</strong><br><a href="${location.url}"`);
 	});
 </script>
 
